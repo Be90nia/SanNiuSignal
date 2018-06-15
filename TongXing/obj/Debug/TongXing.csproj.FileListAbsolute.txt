@@ -1,0 +1,6 @@
+E:\工具软件\我的程序\C#区\异步通信类\TongXing\TongXing\bin\Debug\TongXing.dll
+E:\工具软件\我的程序\C#区\异步通信类\TongXing\TongXing\bin\Debug\TongXing.pdb
+E:\工具软件\我的程序\C#区\异步通信类\TongXing\TongXing\obj\Debug\ResolveAssemblyReference.cache
+E:\工具软件\我的程序\C#区\异步通信类\TongXing\TongXing\obj\Debug\TongXing.dll
+E:\工具软件\我的程序\C#区\异步通信类\TongXing\TongXing\obj\Debug\TongXing.pdb
+E:\工具软件\我的程序\C#区\异步通信类\TongXing\TongXing\bin\Debug\TongXing.XML

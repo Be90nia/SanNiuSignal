@@ -1,0 +1,11 @@
+E:\工具软件\我的程序\C#区\异步通信类\TongXing\TongXing\bin\Debug\SanNiuSignal.dll
+E:\工具软件\我的程序\C#区\异步通信类\TongXing\TongXing\bin\Debug\SanNiuSignal.pdb
+E:\工具软件\我的程序\C#区\异步通信类\TongXing\TongXing\obj\Debug\ResolveAssemblyReference.cache
+E:\工具软件\我的程序\C#区\异步通信类\TongXing\TongXing\obj\Debug\SanNiuSignal.dll
+E:\工具软件\我的程序\C#区\异步通信类\TongXing\TongXing\obj\Debug\SanNiuSignal.pdb
+E:\工具软件\我的程序\C#区\异步通信类\TongXing\TongXing\bin\Debug\SanNiuSignal.xml
+C:\工具文件\我的程序\C#区\异步通信类\TongXing\TongXing\bin\Debug\SanNiuSignal.xml
+C:\工具文件\我的程序\C#区\异步通信类\TongXing\TongXing\bin\Debug\SanNiuSignal.dll
+C:\工具文件\我的程序\C#区\异步通信类\TongXing\TongXing\bin\Debug\SanNiuSignal.pdb
+C:\工具文件\我的程序\C#区\异步通信类\TongXing\TongXing\obj\Debug\SanNiuSignal.dll
+C:\工具文件\我的程序\C#区\异步通信类\TongXing\TongXing\obj\Debug\SanNiuSignal.pdb

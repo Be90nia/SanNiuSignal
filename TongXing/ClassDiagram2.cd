@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Interface Name="SanNiuSignal.FileCenter.IFileReceive" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FileCenter\FileReceive\IFileReceive.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SanNiuSignal.FileCenter.IFileSend">
+    <Position X="2.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FileCenter\FileSend\IFileSend.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SanNiuSignal.FileCenter.FileBase.IFileBase">
+    <Position X="1" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAABAAEAAACAAAAAAAUAQCAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>FileCenter\FileBase\IFileBase.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="宋体" Size="9" />
+</ClassDiagram>

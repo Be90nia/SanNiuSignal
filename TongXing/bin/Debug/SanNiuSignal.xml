@@ -1,0 +1,2082 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SanNiuSignal</name>
+    </assembly>
+    <members>
+        <member name="T:SanNiuSignal.TxDelegate">
+            <summary>
+            不带参数的委托
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.TxDelegate`1">
+            <summary>
+            带一个参数的委托
+            </summary>
+            <typeparam name="T1">T1</typeparam>
+            <param name="object1"></param>
+        </member>
+        <member name="T:SanNiuSignal.TxDelegate`2">
+            <summary>
+            带二个参数的委托
+            </summary>
+            <typeparam name="T1">T1</typeparam>
+            <typeparam name="T2">T2</typeparam>
+            <param name="object1">object1</param>
+            <param name="object2">object2</param>
+        </member>
+        <member name="T:SanNiuSignal.FileCenter.IFileSendMust">
+            <summary>
+            使用文件发送必须实现的一个接口
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.FileCenter.FileBase.IFileMustBase">
+            <summary>
+            发送和接收文件必须要处理的一个基础接口
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileMustBase.FileCancel(System.Int32)">
+            <summary>
+            对方已经取消这个文件的传输；我方已经关掉这个传输
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileMustBase.FileStop(System.Int32)">
+            <summary>
+            对方暂停；我方也已经暂停；等待着对方的再一次请求传输；会在FileOrNotContingue这里触发
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileMustBase.FileBreak(System.Int32,System.String)">
+            <summary>
+            文件已中断；状态已自动改为暂停状态；等待对方上线的时候；进行续传；
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <param name="Reason">中断原因</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileMustBase.FileFailure(System.Int32)">
+            <summary>
+            文件传输失败
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileMustBase.FileContinue(System.Int32)">
+            <summary>
+            文件开始续传；这时不会触发开始传输的方法
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileMustBase.FileOrNotContingue(System.Int32)">
+            <summary>
+            对方发过来的续传确认信息；你是否同意续传；
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <returns>同意或不同意</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileMustBase.FileNoContinue(System.Int32)">
+            <summary>
+            对方拒绝续传;文件又处于暂停状态；
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileMustBase.FileProgress(System.Int32,System.Int32)">
+            <summary>
+            得到文件的进度;每次缓冲区为单位折算成百分比输出进度；这样可以提高效率；
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <param name="Progress">文件进度</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.IFileSendMust.SendSuccess(System.Int32)">
+            <summary>
+            发送完成
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.IFileSendMust.FileRefuse(System.Int32)">
+            <summary>
+            接收方拒绝接收文件
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.IFileSendMust.FileStartOn(System.Int32)">
+            <summary>
+            开始传输
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="T:SanNiuSignal.FileCenter.IFileReceive">
+            <summary>
+            文件接收接口
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.FileCenter.FileBase.IFileBase">
+            <summary>
+            发送和接收文件的基础接口
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileBase.GetFileName(System.Int32)">
+            <summary>
+            得到文件名
+            </summary>
+            <param name="FileLabel">文件编号</param>
+            <returns>文件名</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileBase.GetFileState(System.Int32)">
+            <summary>
+            文件状态；0是等待；1是正在传输；2是暂停
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <returns>文件状态</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileBase.GetFileLenth(System.Int32)">
+            <summary>
+            得到文件总长度；以字节为单位
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <returns>文件总长度</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileBase.GetFileOk(System.Int32)">
+            <summary>
+            得到文件已处理长度；以字节为单位
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <returns>文件已处理长度</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileBase.FileCancel(System.Int32)">
+            <summary>
+            取消发送
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileBase.FileStop(System.Int32)">
+            <summary>
+            暂停发送
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.IFileBase.FileProgress(System.Int32)">
+            <summary>
+            得到文件的进度；返回大于0小于100的进度数；如果文件已不存在返回100；不抛异常
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <returns></returns>
+        </member>
+        <member name="P:SanNiuSignal.FileCenter.FileBase.IFileBase.BufferSize">
+            <summary>
+            文件的缓冲区大小；默认为8192字节;缓冲越大发送速度越快；但同时消耗内存越大；发送和接收文件
+            缓冲区大小请设置相同；否则接收的文件数据会不正确;启用UDP传输文件请不要超过65507字节；
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.FileCenter.FileBase.IFileBase.FileAllOn">
+            <summary>
+            得到正在处理中的文件总数
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FileBase.#ctor(System.Byte[])">
+            <summary>
+            带参数的构造函数,发送方用
+            </summary>
+            <param name="fileDateAll"></param>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FileBase.#ctor(System.Byte,System.Int32,System.Int32)">
+            <summary>
+            带参数的构造函数，接收方用
+            </summary>
+            <param name="fileClassification">图片，文本或其他</param>
+            <param name="fileLabel">文件的标签</param>
+            <param name="fileLenth">文件总长度</param>
+        </member>
+        <member name="P:SanNiuSignal.Basics.FileBase.FileClassification">
+            <summary>
+            图片，文本或其他
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.FileBase.FileLenth">
+            <summary>
+            文件长度
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.FileBase.SendDate">
+            <summary>
+            已发送的数据；主要用于是否重发之用
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.FileBase.FileDateAll">
+            <summary>
+            要发送的数据
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.FileBase.FileLabel">
+            <summary>
+            文件的标签
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.TxStart">
+            <summary>
+            一个最基础的类,服务器和客户端共同要用到的一些方法和事件
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.TxStart.startServer(System.Int32)">
+            <summary>
+            注册服务器,返回一个ITxServer类,再从ITxServer中的startServer一个方法启动服务器
+            </summary>
+            <param name="port">端口</param>
+            <returns>ITxServer</returns>
+        </member>
+        <member name="M:SanNiuSignal.TxStart.startClient(System.String,System.Int32)">
+            <summary>
+            注册客户端,返回一个ITxServer类,再从ITxClient中的startClient一个方法启动客户端;
+            </summary>
+            <param name="ip">ip地址</param>
+            <param name="port">端口</param>
+            <returns>ITxClient</returns>
+        </member>
+        <member name="M:SanNiuSignal.TxStart.startUdp">
+            <summary>
+            注册Udp服务端；端口在Port属性设置，默认为随机；具体到StartEngine启动
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SanNiuSignal.ITxServer">
+            <summary>
+            一个服务器的接口,所有方法和事件都在里面
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.Basics.ITxBase">
+            <summary>
+            一个有基本属性的接口主要是被ITxClient和ITxServer继承;交流QQ群：426414437
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.Basics.ITxBase.StartEngine">
+            <summary>
+            启动引擎
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.Basics.ITxBase.CloseEngine">
+            <summary>
+            关闭引擎
+            </summary>
+        </member>
+        <member name="E:SanNiuSignal.Basics.ITxBase.EngineLost">
+            <summary>
+            当引擎非正常原因自动断开的时候触发此事件
+            </summary>
+        </member>
+        <member name="E:SanNiuSignal.Basics.ITxBase.EngineClose">
+            <summary>
+            当引擎完全关闭释放资源的时候
+            </summary>
+        </member>
+        <member name="E:SanNiuSignal.Basics.ITxBase.AcceptString">
+            <summary>
+            当接收到文本数据的时候,触发此事件
+            </summary>
+        </member>
+        <member name="E:SanNiuSignal.Basics.ITxBase.AcceptByte">
+            <summary>
+            当接收到图片数据的时候,触发此事件
+            </summary>
+        </member>
+        <member name="E:SanNiuSignal.Basics.ITxBase.dateSuccess">
+            <summary>
+            当将数据发送成功且对方已经收到的时候,触发此事件
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.ITxBase.BufferSize">
+            <summary>
+            缓冲区大小；默认为1024字节；不影响最大发送量，如果内存够大或经常发送大数据可以适当加大缓冲区
+            大小；从而可以提高发送速度；否则会自动分包发送，到达对方自动组包；UDP这里不超过65507;
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.ITxBase.EngineStart">
+            <summary>
+            引擎是否已经启动;
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.ITxBase.Ip">
+            <summary>
+            启动ip地址;
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.ITxBase.Port">
+            <summary>
+            启动端口号
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.ITxBase.FileLog">
+            <summary>
+            是否记录引擎历史记录；为空表示不记录
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.ITxServer.sendMessage(System.Net.IPEndPoint,System.Byte[])">
+            <summary>
+            服务器向客户端发送图片数据
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="data">未加密的数据</param>
+        </member>
+        <member name="M:SanNiuSignal.ITxServer.sendMessage(System.Net.IPEndPoint,System.String)">
+            <summary>
+            服务器向客户端发送文本数据
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="data">未加密的数据</param>
+        </member>
+        <member name="M:SanNiuSignal.ITxServer.SendFile(System.Net.IPEndPoint,System.String)">
+            <summary>
+            发送文件；如果地址等不正确会抛出相应的异常；首先要先到FileStart启动文件发送系统;
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="fileName">文件地址</param>
+            <returns>返回文件标签；可以控制文件的任何事情</returns>
+        </member>
+        <member name="M:SanNiuSignal.ITxServer.ContinueFile(System.Net.IPEndPoint,System.Int32)">
+            <summary>
+            对文件进行续传；如果有不正确会抛出相应的异常
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="fileLable">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.ITxServer.clientClose(System.Net.IPEndPoint)">
+            <summary>
+            服务器强制关闭一个客户端
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+        </member>
+        <member name="M:SanNiuSignal.ITxServer.clientCheck(System.Net.IPEndPoint)">
+            <summary>
+            检查某个客户端是否在线
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <returns>bool</returns>
+        </member>
+        <member name="M:SanNiuSignal.ITxServer.clientAllClose">
+            <summary>
+            关闭所有客户端连接
+            </summary>
+        </member>
+        <member name="E:SanNiuSignal.ITxServer.Connect">
+            <summary>
+            当有客户连接成功的时候,触发此事件
+            </summary>
+        </member>
+        <member name="E:SanNiuSignal.ITxServer.Disconnection">
+            <summary>
+            当有客户突然断开的时候,触发此事件,文本参数是代表断开的原因
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.ITxServer.ClientNumber">
+            <summary>
+            当前客户端数量
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.ITxServer.ClientMax">
+            <summary>
+            允许最多客户端数
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.ITxServer.ClientAll">
+            <summary>
+            得到所有的客户端
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.FileCenter.IFileSend">
+            <summary>
+            文件发送接口；它继承了文件基础接口IFileBase
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.FileCenter.IFileReceiveMust">
+            <summary>
+            文件接收必须实现的接口;它继承IFileMustBase
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.IFileReceiveMust.ReceiveSuccess(System.Int32)">
+            <summary>
+            接收完成
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.IFileReceiveMust.ReceiveOrNo(System.Int32,System.String,System.Int64)">
+            <summary>
+            对方要发送文件过来；你是否同意接收；如果同意请回复文件地址；不同意直接回复空文本；
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <param name="FileName">文件名称</param>
+            <param name="FileLenth">文件长度</param>
+            <returns>文件地址</returns>
+        </member>
+        <member name="T:SanNiuSignal.FileCenter.FileStart">
+            <summary>
+            文件启动中心;在这里你可以启动文件发送和接收项目；
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileStart.StartFileSend(SanNiuSignal.FileCenter.IFileSendMust)">
+            <summary>
+            启动文件发送系统；
+            </summary>
+            <param name="sendMust">IFileSendMust</param>
+            <returns>IFileSend</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileStart.StartFileReceive(SanNiuSignal.FileCenter.IFileReceiveMust)">
+            <summary>
+            启动文件接收系统
+            </summary>
+            <param name="receiveMust">IFileReceiveMust</param>
+            <returns>IFileReceive</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileStart.ReceiveDateTO(System.Byte[],SanNiuSignal.Basics.StateBase)">
+            <summary>
+            文件数据分析处理中心；如果是发送方发过来的数据让接收方去处理
+            </summary>
+            <param name="fileDate">文件数据</param>
+            <param name="stateOne">StateBase</param>
+            <returns>处理以后的数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileStart.FileContinue(System.Int32,SanNiuSignal.Basics.StateBase)">
+            <summary>
+            对文件进行续传；只要一个文件标签，会自动分析是发送方还是接收方的文件标签；
+            </summary>
+            <param name="fileLable">文件标签</param>
+            <param name="stateOne">StateBase</param>
+            <returns></returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileStart.FileStopAll">
+            <summary>
+            中断所有的文件；内部网络全部中断的时候用到的
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileStart.FileStopITxBase(SanNiuSignal.Basics.StateBase)">
+            <summary>
+            通过StateBase中断所有的文件；服务器用到的
+            </summary>
+            <param name="stateOne">StateBase</param>
+        </member>
+        <member name="T:SanNiuSignal.UdpTx">
+            <summary>
+            面向Udp的主线程类
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.Basics.FTxBase">
+            <summary>
+            一个有基本属性的父类;
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.Basics.FTxBase._engineStart">
+            <summary>
+            //客户端引擎是否已经启动;
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.StartEngine">
+            <summary>
+            启动引擎
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.CloseEngine">
+            <summary>
+            关闭引擎释放资源
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.OnEngineLost(System.String)">
+            <summary>
+            当引擎非正常原因自动断开的时候触发此事件
+            </summary>
+            <param name="str">断开原因</param>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.OnEngineClose">
+            <summary>
+            当引擎完全关闭释放资源的时候触发此事件
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.OnAcceptString(System.Net.IPEndPoint,System.String)">
+            <summary>
+            当接收到文本数据的时候,触发此事件
+            </summary>
+            <param name="iPEndPoint">对方终结点</param>
+            <param name="str">文本数据</param>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.OnAcceptByte(System.Net.IPEndPoint,System.Byte[])">
+            <summary>
+            当接收到图片数据的时候,触发此事件
+            </summary>
+            <param name="iPEndPoint">对方终结点</param>
+            <param name="bytes">图片数据</param>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.OndateSuccess(System.Net.IPEndPoint)">
+            <summary>
+            当将数据发送成功且对方已经收到的时候,触发此事件
+            </summary>
+            <param name="iPEndPoint">对方终结点</param>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.sendMessage(SanNiuSignal.Basics.StateBase,System.Byte[])">
+            <summary>
+            服务器向客户端发送图片数据
+            </summary>
+            <param name="stateOne">StateBase</param>
+            <param name="data">未加密的数据</param>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.sendMessage(SanNiuSignal.Basics.StateBase,System.String)">
+            <summary>
+            服务器向客户端发送文本数据
+            </summary>
+            <param name="stateOne">StateBase</param>
+            <param name="data">未加密的数据</param>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.Send(SanNiuSignal.Basics.StateBase,System.Byte[])">
+            <summary>
+            向客户端发送数据,最基础的发送
+            </summary>
+            <param name="stateOne">StateBase</param>
+            <param name="data">发送的数据</param>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.FileSend(SanNiuSignal.Basics.StateBase,System.String)">
+            <summary>
+            发送文件；首先要注册文件发送系统；会返回一个整数型的文件标签；用来控制这个文件以后一系列操作
+            </summary>
+            <param name="stateOne">StateBase</param>
+            <param name="fileName">文件地址</param>
+            <returns>文件标签</returns>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.FileContinue(SanNiuSignal.Basics.StateBase,System.Int32)">
+            <summary>
+            对文件进行续传;
+            </summary>
+            <param name="stateOne">StateBase</param>
+            <param name="fileLable">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.codeManage(SanNiuSignal.Basics.StateBase,SanNiuSignal.PasswordManage.StateCode)">
+            <summary>
+            数据第二层分配中心；把数据归类
+            </summary>
+            <param name="stateOne"></param>
+            <param name="statecode"></param>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.CommonCodeManage(SanNiuSignal.Basics.StateBase,SanNiuSignal.PasswordManage.StateCode)">
+            <summary>
+            接收到的普通数据处中心
+            </summary>
+            <param name="stateOne">StateBase</param>
+            <param name="stateCode">StateCode</param>
+        </member>
+        <member name="M:SanNiuSignal.Basics.FTxBase.FileOperate(System.String)">
+            <summary>
+            引擎信息记录
+            </summary>
+            <param name="str">信息</param>
+        </member>
+        <member name="E:SanNiuSignal.Basics.FTxBase.EngineLost">
+            <summary>
+            当引擎非正常原因自动断开的时候触发此事件
+            </summary>
+        </member>
+        <member name="E:SanNiuSignal.Basics.FTxBase.EngineClose">
+            <summary>
+            当引擎完全关闭释放资源的时候
+            </summary>
+        </member>
+        <member name="E:SanNiuSignal.Basics.FTxBase.AcceptString">
+            <summary>
+            当接收到文本数据的时候,触发此事件
+            </summary>
+        </member>
+        <member name="E:SanNiuSignal.Basics.FTxBase.AcceptByte">
+            <summary>
+            当接收到图片数据的时候,触发此事件
+            </summary>
+        </member>
+        <member name="E:SanNiuSignal.Basics.FTxBase.dateSuccess">
+            <summary>
+            当将数据发送成功且对方已经收到的时候,触发此事件
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.FTxBase.IpEndPoint">
+            <summary>
+            本地的终结点地址封装；
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.FTxBase.Ip">
+            <summary>
+            ip地址设置和读取
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.FTxBase.Port">
+            <summary>
+            端口号设置和读取
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.FTxBase.BufferSize">
+            <summary>
+            缓冲区大小；默认为1024字节；不影响最大发送量，如果内存够大或经常发送大数据可以适当加大缓冲区
+            大小；从而可以提高发送速度；否则会自动分包发送，到达对方自动组包；
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.FTxBase.EngineStart">
+            <summary>
+            引擎是否已经启动;
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.FTxBase.FileLog">
+            <summary>
+            是否记录引擎历史记录；为空表示不记录
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.FTxBase.HeartTime">
+            <summary>
+            设置发送心跳间隔的时间,以秒为单位,默认为10秒
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.IUdpTx">
+            <summary>
+            Udp通信接口类
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.IUdpTx.sendMessage(System.Net.IPEndPoint,System.Byte[])">
+            <summary>
+            服务器向客户端发送图片数据
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="data">未加密的数据</param>
+        </member>
+        <member name="M:SanNiuSignal.IUdpTx.sendMessage(System.Net.IPEndPoint,System.String)">
+            <summary>
+            服务器向客户端发送文本数据
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="data">未加密的数据</param>
+        </member>
+        <member name="M:SanNiuSignal.IUdpTx.SendFile(System.Net.IPEndPoint,System.String)">
+            <summary>
+            发送文件；如果地址等不正确会抛出相应的异常；首先要先到FileStart启动文件发送系统;
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="fileName">文件地址</param>
+            <returns>返回文件标签；可以控制文件的任何事情</returns>
+        </member>
+        <member name="M:SanNiuSignal.IUdpTx.ContinueFile(System.Net.IPEndPoint,System.Int32)">
+            <summary>
+            对文件进行续传；如果有不正确会抛出相应的异常
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="fileLable">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.UdpTx.StartEngine">
+            <summary>
+            启动Udp系统,端口号在Port属性里设置，否则由系统自动分配可用端口号
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.UdpTx.EndReceiveFromCallback(System.IAsyncResult)">
+            <summary>
+            接收到信息的回调函数
+            </summary>
+            <param name="iar"></param>
+        </member>
+        <member name="M:SanNiuSignal.UdpTx.BeginReceiveFrom">
+            <summary>
+            异步接收函数
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.UdpTx.sendMessage(System.Net.IPEndPoint,System.Byte[])">
+            <summary>
+            向对方发送图片数据
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="data">未加密的数据</param>
+        </member>
+        <member name="M:SanNiuSignal.UdpTx.sendMessage(System.Net.IPEndPoint,System.String)">
+            <summary>
+            向对方发送文本数据
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="data">未加密的数据</param>
+        </member>
+        <member name="M:SanNiuSignal.UdpTx.SendFile(System.Net.IPEndPoint,System.String)">
+            <summary>
+            发送文件；如果地址等不正确会抛出相应的异常；首先要先到FileStart启动文件发送系统;
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="fileName">文件地址</param>
+            <returns>返回文件标签；可以控制文件的任何事情</returns>
+        </member>
+        <member name="M:SanNiuSignal.UdpTx.ContinueFile(System.Net.IPEndPoint,System.Int32)">
+            <summary>
+            对文件进行续传；如果有不正确会抛出相应的异常
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="fileLable">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.UdpTx.Send(SanNiuSignal.Basics.StateBase,System.Byte[])">
+            <summary>
+            最基础的Udp异步发送
+            </summary>
+            <param name="stateBase">StateBase</param>
+            <param name="bytes">数据</param>
+        </member>
+        <member name="M:SanNiuSignal.UdpTx.SendCallback(System.IAsyncResult)">
+            <summary>
+            发送完数据之后的回调函数
+            </summary>
+            <param name="ar">Clicent</param>
+        </member>
+        <member name="M:SanNiuSignal.UdpTx.CloseEngine">
+            <summary>
+            关闭Udp引擎,释放所有资源
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.PublicTool.PasswordCode">
+            <summary>
+            一个数据交换暗号的常量中心
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._commonCode">
+            <summary>
+            发送普通信息的代码
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._textCode">
+            <summary>
+            发送文本的代码
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._photographCode">
+            <summary>
+            发送的图片的代码
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._dateSuccess">
+            <summary>
+            数据已经发送成功的代码;
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._bigDateCode">
+            <summary>
+            分包数据使用的代码
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._fileHeadCode">
+            <summary>
+            大文件的包头代码
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._fileSubjectCode">
+            <summary>
+            大文件的主体代码
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._fileAgreeReceive">
+            <summary>
+            同意接收文件的代码
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._verificationCode">
+            <summary>
+            一般验证需要用的代号
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._heartbeatCode">
+            <summary>
+            发送心跳的代码
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._serverToClient">
+            <summary>
+            服务器发给客户端的登录信息
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._clientToServer">
+            <summary>
+            客户端回给服务器的登录信息
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._clientCloseCode">
+            <summary>
+            客户端收到这个信息就会不重连的关掉
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._stickPackageCode">
+            <summary>
+            TCP粘包协议的代码
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._fileCode">
+            <summary>
+            文件的标示符号
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._fileRefuse">
+            <summary>
+            对方拒绝
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._fileOk">
+            <summary>
+            对方同意
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._sendUser">
+            <summary>
+            发送方的数据
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._receiveUser">
+            <summary>
+            接收方的数据
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._sendStop">
+            <summary>
+            暂停发送
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._fileCancel">
+            <summary>
+            对方文件已经取消
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._fileContinue">
+            <summary>
+            代表是续传数据的代码
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._fileContinueOk">
+            <summary>
+            同意续传
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicTool.PasswordCode._fileContinueNo">
+            <summary>
+            拒绝续传
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.PublicTool.CommonMethod">
+            <summary>
+            普通方法工具箱
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.CommonMethod.Hostname2ip(System.String)">
+            <summary>
+            域名转换为IP地址
+            </summary>
+            <param name="hostname">域名或IP地址</param>
+            <returns>IP地址</returns>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.CommonMethod.FileOperate(System.String,System.String)">
+            <summary>
+            服务器信息记录
+            </summary>
+            <param name="FileLog">记录地址</param>
+            <param name="str">记录内容</param>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.CommonMethod.eventInvoket(System.Action)">
+            <summary>
+            外部调用是否需要用Invoket
+            </summary>
+            <param name="func">事件参数</param>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.CommonMethod.eventInvoket(System.Func{System.Object})">
+            <summary>
+            具有返回值的 非bool 外部调用是否需要用Invoket
+            </summary>
+            <param name="func">方法</param>
+            <returns>返回客户操作之后的数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.CommonMethod.StringRight(System.String,System.String)">
+            <summary>
+            取文本中某个文本的右边文本
+            </summary>
+            <param name="AllDate">总文本</param>
+            <param name="offstr">标志文本</param>
+            <returns>取出的文本</returns>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.CommonMethod.BetweenThrow(System.String)">
+            <summary>
+            throw文本过滤;
+            </summary>
+            <param name="str">原文本</param>
+            <returns>过滤之后的文本</returns>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.CommonMethod.Between(System.String,System.String,System.String)">
+            <summary>  
+            取文本中间内容  
+            </summary>  
+            <param name="str">原文本</param>  
+            <param name="leftstr">左边文本</param>  
+            <param name="rightstr">右边文本</param>  
+            <returns>返回中间文本内容</returns>  
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.CommonMethod.FileStreamRead(System.String)">
+            <summary>
+            读文件操作；如果打开正常返回文件流；异常返回null
+            </summary>
+            <param name="fileName">文件地址</param>
+            <returns>文件流</returns>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.CommonMethod.FileStreamWrite(System.String)">
+            <summary>
+            写文件操作；如果打开正常返回文件流；异常返回null
+            </summary>
+            <param name="fileName">文件地址</param>
+            <returns>FileStream</returns>
+        </member>
+        <member name="T:SanNiuSignal.PublicClass.TcpState">
+            <summary>
+            TCP协议的state
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.Basics.StateBase">
+            <summary>
+            一个State父类
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.Basics.StateBase.#ctor(System.Net.Sockets.Socket,System.Int32)">
+            <summary>
+            带参数的构造函数
+            </summary>
+            <param name="socket">Socket</param>
+            <param name="bufferSize">缓冲区大小</param>
+        </member>
+        <member name="M:SanNiuSignal.Basics.StateBase.SendDateInitialization(System.Int32,System.Byte[])">
+            <summary>
+            同时设置发送数据和它的标签的方法
+            </summary>
+            <param name="Lable">标签</param>
+            <param name="sendDate">已发送数据</param>
+        </member>
+        <member name="P:SanNiuSignal.Basics.StateBase.BufferBackup">
+            <summary>
+            备份缓冲区;主要是缓冲区有时候需要增大或缩小的时候用到；
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.StateBase.ReceiveFile">
+            <summary>
+            接收文件类
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.StateBase.SendFile">
+            <summary>
+            发送文件类
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.StateBase.BufferSize">
+            <summary>
+            缓冲区大小
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.StateBase.WorkSocket">
+            <summary>
+            工作的Socket
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.StateBase.Buffer">
+            <summary>
+            缓冲区
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.StateBase.SendDate">
+            <summary>
+            已发送的数据,主要用于对方没有收到信息可以重发用
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.StateBase.SendDateLabel">
+            <summary>
+            已发数据的标签
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.Basics.StateBase.IpEndPoint">
+            <summary>
+            IPEndPoint得到客户端地址,端口号；
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.PublicClass.TcpState.Residualpackage">
+            <summary>
+            处理粘包之用;如果有残留下面一个包和这个接上
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.PublicClass.TcpState.#ctor(System.Net.Sockets.Socket,System.Int32)">
+            <summary>
+            带参数的构造函数
+            </summary>
+            <param name="socket">Socket</param>
+            <param name="bufferSize">缓冲区</param>
+        </member>
+        <member name="P:SanNiuSignal.PublicClass.TcpState.ConnectOk">
+            <summary>
+            二个作用，客户端真正关闭了引擎；服务器:是否真正与对方相连接;主要用与服务器中的对象;
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.PublicClass.TcpState.HeartTime">
+            <summary>
+            心跳时间,接收到信息的时间，用于心跳设置
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.PasswordManage.ReceiveDateOne">
+            <summary>
+            对接收到的数据进行第一次处理；找出需要的数据；把空的去掉
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.ReceiveDateOne.DateOneManage(SanNiuSignal.Basics.StateBase,System.Int32)">
+            <summary>
+            把缓冲区的数据拿出来；并且把缓冲区清空；
+            </summary>
+            <param name="stateOne">StateBase</param>
+            <param name="insert">数据实际长度</param>
+            <returns>需要的数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileMustBase.#ctor(SanNiuSignal.FileCenter.FileBase.IFileMustBase)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="MustBase">IFileMustBase</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileMustBase.FileCancel(System.Int32)">
+            <summary>
+            对方已经取消这个文件的传输；我方已经关掉这个传输
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileMustBase.FileStop(System.Int32)">
+            <summary>
+            对方暂停；我方也已经暂停；等待着对方的再一次请求传输；会在FileOrNotContingue这里触发
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileMustBase.FileBreak(System.Int32,System.String)">
+            <summary>
+            文件已中断；状态已自动改为暂停状态；等待对方上线的时候；进行续传；
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <param name="Reason">中断原因</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileMustBase.FileFailure(System.Int32)">
+            <summary>
+            文件传输失败
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileMustBase.FileContinue(System.Int32)">
+            <summary>
+            文件开始续传；这时不会触发开始传输的方法
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileMustBase.FileOrNotContingue(System.Int32)">
+            <summary>
+            对方发过来的续传确认信息；你是否同意续传；
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <returns>同意或不同意</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileMustBase.FileNoContinue(System.Int32)">
+            <summary>
+            对方拒绝续传;文件又处于暂停状态；
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileMustBase.FileProgress(System.Int32,System.Int32)">
+            <summary>
+            得到文件的进度;每次缓冲区为单位折算成百分比输出进度；这样可以提高效率；
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <param name="Progress">文件进度</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileMustBase.FileProgress(SanNiuSignal.FileCenter.FileState)">
+            <summary>
+            内部用的进度；里面会自动计算
+            </summary>
+            <param name="state">FileState</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileReceive.FileReceiveMust.#ctor(SanNiuSignal.FileCenter.IFileReceiveMust)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="FileReceiveMust">IFileSendMust</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileReceive.FileReceiveMust.ReceiveSuccess(System.Int32)">
+            <summary>
+            文件接收完成
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileReceive.FileReceiveMust.ReceiveOrNo(System.Int32,System.String,System.Int64)">
+            <summary>
+            有个文件要传来；请问是否接收;
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <param name="FileName">文件名称</param>
+            <param name="FileLenth">文件长度</param>
+            <returns>文件地址</returns>
+        </member>
+        <member name="T:SanNiuSignal.PasswordManage.StateCode">
+            <summary>
+            一个普通的工具类,对解码和外部类起到一个桥梁的作用
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.StateCode.#ctor(System.Byte,System.String)">
+            <summary>
+            发送文本数据的时候需要用到的
+            </summary>
+            <param name="i">文本代码</param>
+            <param name="str">文本内容</param>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.StateCode.#ctor(System.Byte,System.String,System.Byte[])">
+            <summary>
+            当接收到正确的文本数据的时候要用到的
+            </summary>
+            <param name="i">文件代号</param>
+            <param name="str">文本内容</param>
+            <param name="replyDate">回复的数据</param>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.StateCode.#ctor(System.Byte,System.Byte[],System.Byte[])">
+            <summary>
+            当接收到正确的字节集数据的时候要用到的
+            </summary>
+            <param name="i"></param>
+            <param name="dateByte"></param>
+            <param name="replyDate"></param>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.StateCode.#ctor(System.Byte,System.Byte[])">
+            <summary>
+            用于只有状态码和字节集
+            </summary>
+            <param name="i">归类2,3</param>
+            <param name="b">字节数组b</param>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.StateCode.#ctor(System.Byte[])">
+            <summary>
+            对数据进行直接回复
+            </summary>
+            <param name="replyDate">字节集</param>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.StateCode.#ctor(System.Int32,System.Byte[])">
+            <summary>
+            用与只有已发数据和编号
+            </summary>
+            <param name="Label">编号</param>
+            <param name="dateByte">已发数据</param>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.StateCode.#ctor(System.Byte,System.Int32)">
+            <summary>
+            用与状态码和已发数据编号
+            </summary>
+            <param name="state"></param>
+            <param name="Label"></param>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.StateCode.#ctor(System.Byte)">
+            <summary>
+            有些不需要数据
+            </summary>
+            <param name="i">归类3,4</param>
+        </member>
+        <member name="P:SanNiuSignal.PasswordManage.StateCode.ReplyDate">
+            <summary>
+            直接回复的数据
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.PasswordManage.StateCode.State">
+            <summary>
+            提取状态码
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.PasswordManage.StateCode.DateByte">
+            <summary>
+            提取字节数组
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.PasswordManage.StateCode.Datestring">
+            <summary>
+            提取文本数据
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.PasswordManage.StateCode.SendDateLabel">
+            <summary>
+            已发数据的标签
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.SocketClient">
+            <summary>
+            面向客户端的主线程类!
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.Basics.TcpFTxBase">
+            <summary>
+            主要是继承FTxBase;还有一些TCP协议需要用到的一些方法；
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.Basics.TcpFTxBase.TcpDateOne(SanNiuSignal.PublicClass.TcpState,System.Byte[])">
+            <summary>
+            当Tcp收到数据全部在这里处理;也是数据的第一次处理
+            </summary>
+            <param name="stateOne">TcpState</param>
+            <param name="reciverByte">数据</param>
+        </member>
+        <member name="M:SanNiuSignal.Basics.TcpFTxBase.TcpCodeManage(SanNiuSignal.PublicClass.TcpState,SanNiuSignal.PasswordManage.StateCode)">
+            <summary>
+            TCP协议使用的数据第二层分配中心；把数据归类;
+            </summary>
+            <param name="stateOne"></param>
+            <param name="statecode"></param>
+        </member>
+        <member name="M:SanNiuSignal.Basics.TcpFTxBase.VerificationCodeManage(SanNiuSignal.PublicClass.TcpState,System.Byte)">
+            <summary>
+            要被TCP主类重写的；关于暗号怎么处理的类；
+            </summary>
+            <param name="stateOne">TcpState</param>
+            <param name="haveDate">字节</param>
+        </member>
+        <member name="T:SanNiuSignal.ITxClient">
+            <summary>
+            一个客户端的接口所有方法和事件都在里面
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.ITxClient.sendMessage(System.Byte[])">
+            <summary>
+            客户端向服务器发送图片数据
+            </summary>
+            <param name="data">字节数据</param>
+        </member>
+        <member name="M:SanNiuSignal.ITxClient.sendMessage(System.String)">
+            <summary>
+            客户端向服务器发送文本数据
+            </summary>
+            <param name="data">文本数据</param>
+        </member>
+        <member name="M:SanNiuSignal.ITxClient.SendFile(System.String)">
+            <summary>
+            发送文件；如果地址等不正确会抛出相应的异常；首先要先到FileStart启动文件发送系统;
+            </summary>
+            <param name="fileName">文件地址</param>
+        </member>
+        <member name="M:SanNiuSignal.ITxClient.ContinueFile(System.Int32)">
+            <summary>
+            对文件进行续传；如果有不正确会抛出相应的异常
+            </summary>
+            <param name="fileLable">文件标签</param>
+        </member>
+        <member name="E:SanNiuSignal.ITxClient.StartResult">
+            <summary>
+            引擎登录成功或失败都会触发此事件,登录失败的话会有失败的原因
+            </summary>
+        </member>
+        <member name="E:SanNiuSignal.ITxClient.ReconnectionStart">
+            <summary>
+            自动重连开始的时候,触发此事件
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.ITxClient.ReconnectMax">
+            <summary>
+            当连接断开时是否重连,0为不重连,默认重连三次;
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.ITxClient.OutTime">
+            <summary>
+            登录超时时间，默认为10秒
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.#ctor(System.String,System.Int32)">
+            <summary>
+            带参数的构造函数
+            </summary>
+            <param name="ip">服务器的ip地址</param>
+            <param name="port">服务器的端口</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.StartEngine">
+            <summary>
+            启动客户端,设置超时间在OutTime里设置,无论失败或成功都会触发StartResult事件;
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.start">
+            <summary>
+            启动客户端基础的一个线程
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.AcceptCallback(System.IAsyncResult)">
+            <summary>
+            当连接服务器之后的回调函数
+            </summary>
+            <param name="ar">TcpClient</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.reconnect">
+            <summary>
+            重连模块
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.loginTimeout(System.Net.Sockets.Socket)">
+            <summary>
+            登录之超时判断
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.loginFailure(System.String)">
+            <summary>
+            登录失败之后要处理的事情
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.loginSuccess">
+            <summary>
+            当客户端完全连接上服务器之后要处理的一些事情
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.ReadCallback(System.IAsyncResult)">
+            <summary>
+            当接收到数据之后的回调函数
+            </summary>
+            <param name="ar"></param>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.VerificationCodeManage(SanNiuSignal.PublicClass.TcpState,System.Byte)">
+            <summary>
+            登录以及心跳代码进行处理；由基类在操作
+            </summary>
+            <param name="stateOne">TcpState</param>
+            <param name="haveDate">byte</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.sendMessage(System.Byte[])">
+            <summary>
+            客户端向服务器发送图片数据
+            </summary>
+            <param name="data">字节数据</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.sendMessage(System.String)">
+            <summary>
+            客户端向服务器发送文本数据
+            </summary>
+            <param name="data">文本数据</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.SendFile(System.String)">
+            <summary>
+            发送文件；如果地址等不正确会抛出相应的异常；首先要先到FileStart启动文件发送系统;
+            </summary>
+            <param name="fileName">文件地址</param>
+            <returns>返回文件标签；可以控制文件的任何事情</returns>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.ContinueFile(System.Int32)">
+            <summary>
+            对文件进行续传；如果有不正确会抛出相应的异常
+            </summary>
+            <param name="fileLable">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.Send(SanNiuSignal.Basics.StateBase,System.Byte[])">
+            <summary>
+            向服务器发送数据,最基础和原始的
+            </summary>
+            <param name="stateBase">StateBase</param>
+            <param name="data">发送的数据</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.SendCallback(System.IAsyncResult)">
+            <summary>
+            发送完数据之后的回调函数
+            </summary>
+            <param name="ar">Clicent</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.heartThread">
+            <summary>
+            心跳线程
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.CloseEngine">
+            <summary>
+            关闭相连的scoket以及关联的StateObject,释放所有的资源
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.SocketClient.lostClient(System.String)">
+            <summary>
+            当客户端突然与服务器断开的时候
+            </summary>
+            <param name="str"></param>
+        </member>
+        <member name="E:SanNiuSignal.SocketClient.ReconnectionStart">
+            <summary>
+            自动重连开始的时候,触发此事件
+            </summary>
+        </member>
+        <member name="E:SanNiuSignal.SocketClient.StartResult">
+            <summary>
+            客户端登录成功或失败都会触发此事件,登录失败的话会有失败的原因
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.SocketClient.ReconnectMax">
+            <summary>
+            当连接断开时是否重连,默认重连;
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.SocketClient.OutTime">
+            <summary>
+            登录超时时间设置，默认10秒
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.RandomPublic.RandomNumber(System.Int32)">
+            <summary>
+            根据指定种子取一个随机数
+            </summary>
+            <param name="number">最大值</param>
+            <returns>随机数</returns>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.RandomPublic.RandomTime(System.Int32)">
+            <summary>
+            根据时间为种子取一个随机数
+            </summary>
+            <param name="number">最大值</param>
+            <returns>随机数</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileState.#ctor(System.Int32,System.Int64,System.String,System.IO.FileStream)">
+            <summary>
+            发送方的构造函数
+            </summary>
+            <param name="fileLabel">文件标签</param>
+            <param name="fileLenth">文件长度</param>
+            <param name="fileName">文件地址</param>
+            <param name="fileStream">文件流</param>
+        </member>
+        <member name="P:SanNiuSignal.FileCenter.FileState.FileOkLenth">
+            <summary>
+            文件已处理量
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.FileCenter.FileState.StateFile">
+            <summary>
+            文件状态；0是等待；1是正在传输；2是暂停
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.FileCenter.FileState.FileName">
+            <summary>
+            文件地址
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.FileCenter.FileState.Filestream">
+            <summary>
+            发送文件流
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.FileCenter.FileState.FileLenth">
+            <summary>
+            文件长度
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.FileCenter.FileState.FileLabel">
+            <summary>
+            文件的标签
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.FileCenter.FileState.StateOne">
+            <summary>
+            StateBase；
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.PasswordManage.StickPackage">
+            <summary>
+            一个处理粘包的工具；
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.StickPackage.EncryptionPackage(System.Byte[]@)">
+            <summary>
+            对TCP发送进行粘包加密；
+            </summary>
+            <param name="sendDate">要加密的数据</param>
+            <returns>加密之后的数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.StickPackage.DecryptPackage(System.Byte[],System.Byte[]@)">
+            <summary>
+            对TCP粘包数据进行解密；把所有完整的包通过集合形式返回给客户
+            </summary>
+            <param name="receiveDate">接收到的数据</param>
+            <param name="residualpackage">上次残留的数据</param>
+            <returns>返回的数据集合;</returns>
+        </member>
+        <member name="T:SanNiuSignal.PasswordManage.ReceiveDateDistribution">
+            <summary>
+            对接收到的数据进行分配;分配中心
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.ReceiveDateDistribution.Distribution(System.Byte[])">
+            <summary>
+            一个分配函数;返回是NULL说明不是本系统的数据；违法数据等等
+            </summary>
+            <param name="date">数据</param>
+            <returns>StateCode</returns>
+        </member>
+        <member name="T:SanNiuSignal.PasswordManage.EncryptionDecrypt">
+            <summary>
+            普通数据加密和解密中心
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecrypt.encryption(SanNiuSignal.PasswordManage.StateCode,SanNiuSignal.Basics.StateBase)">
+            <summary>
+            对文本和图片数据进行加密;如果长度超过限制，直接抛给文件处理中心
+            </summary>
+            <param name="stateCode">StateCode</param>
+            <param name="state">StateBase</param>
+            <returns>要发送的数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecrypt.encryptionTemporary(System.Byte[],System.Byte,SanNiuSignal.Basics.StateBase)">
+            <summary>
+            一个普通的对数据主体部分进行加密；
+            </summary>
+            <param name="date">要加密的数据</param>
+            <param name="textCode"></param>
+            <param name="state">StateBase</param>
+            <returns>加密之后的数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecrypt.deciphering(System.Byte[],SanNiuSignal.Basics.StateBase)">
+            <summary>
+            对文本和图片数据进行解密;
+            </summary>
+            <param name="date">接收到的数据</param>
+            <param name="state">StateBase</param>
+            <returns>StateCode</returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.UdpPortSetGet.SetPort(System.Int32,System.Byte[])">
+            <summary>
+            把一个端口号放到数据里加密
+            </summary>
+            <param name="port">端口号</param>
+            <param name="date">数据</param>
+            <returns>返回的数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.UdpPortSetGet.GetPort(System.Byte[]@)">
+            <summary>
+            取出一个端口号；同时得到去除这个端口号的数据；
+            </summary>
+            <param name="date">数据</param>
+            <returns>返回端口号</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileSend.FileSendMust.#ctor(SanNiuSignal.FileCenter.IFileSendMust)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="FileSendMust">IFileSendMust</param>
+        </member>
+        <member name="T:SanNiuSignal.PublicTool.ByteToDate">
+            <summary>
+            数据计算的一些方法
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.ByteToDate.CombinationTwo(System.Byte,System.Byte,System.Int32)">
+            <summary>
+            把一个整数和二个字节组成新的字节数组
+            </summary>
+            <param name="a">字节</param>
+            <param name="b">字节</param>
+            <param name="c">整数</param>
+            <returns>完成后的数组</returns>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.ByteToDate.ByteToInt(System.Int32,System.Byte[])">
+            <summary>
+            从一个字节数组里面取出一个整数
+            </summary>
+            <param name="a">起始位置</param>
+            <param name="b">字节数组</param>
+            <returns>整数</returns>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.ByteToDate.ByteToLong(System.Int32,System.Byte[])">
+            <summary>
+            从一个字节数组里面取出一个长整数
+            </summary>
+            <param name="a">起始位置</param>
+            <param name="b">字节数组</param>
+            <returns>长整数</returns>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.ByteToDate.IntToByte(System.Int32,System.Int32,System.Byte[])">
+            <summary>
+            把一个整数Copy到一个字节数组的指定位置
+            </summary>
+            <param name="a">整数</param>
+            <param name="b">起始位置</param>
+            <param name="c">字节数组</param>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.ByteToDate.IntToByte(System.Int64,System.Int32,System.Byte[])">
+            <summary>
+            把一个长整数Copy到一个字节数组的指定位置
+            </summary>
+            <param name="a">长整数</param>
+            <param name="b">起始位置</param>
+            <param name="c">字节数组</param>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.ByteToDate.ByteToByte(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            把一个数组取出指定长度
+            </summary>
+            <param name="a">数据</param>
+            <param name="b">长度</param>
+            <param name="index">起始位置</param>
+            <returns>返回的数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.ByteToDate.OffsetEncryption(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            通过偏移量对一段数据进行加密；把标签和数据当做一个整体；
+            </summary>
+            <param name="date">需要加密的数据</param>
+            <param name="sendDateLabel">标签</param>
+            <param name="offset">偏移量</param>
+            <returns>加密完成的数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.PublicTool.ByteToDate.OffsetDecrypt(System.Byte[],System.Int32@,System.Int32)">
+            <summary>
+            通过偏移量对一段数据进行解密；
+            </summary>
+            <param name="date">待解密的数据</param>
+            <param name="sendDateLabel">标签</param>
+            <param name="offset">偏移量</param>
+            <returns>解密出来的数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecryptFile.FileHeadEncryption(SanNiuSignal.FileCenter.FileState)">
+            <summary>
+            发送方对一个文件包头进行加密得到一个byte[]
+            </summary>
+            <param name="fileSend"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecryptFile.FileHeadDecrypt(System.Byte[],System.IO.FileStream)">
+            <summary>
+            对包头文件进行解密
+            </summary>
+            <param name="fileDate"></param>
+            <param name="fs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecryptFile.FileSubjectEncryption(SanNiuSignal.FileCenter.FileState,System.Int32)">
+            <summary>
+            对文件主体进行加密
+            </summary>
+            <param name="fileSend">FileState</param>
+            <param name="bufferSize">缓冲区大小</param>
+            <returns>加密之后数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecryptFile.FileSubjectDecrypt(SanNiuSignal.FileCenter.FileState,System.Byte[])">
+            <summary>
+            对文件主体进行解密；
+            </summary>
+            <param name="fileSend"></param>
+            <param name="receiveDate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecryptFile.FileSevenEncryption(System.Byte,System.Byte,System.Int32)">
+            <summary>
+            对7位数的普通通信进行加密；
+            </summary>
+            <param name="whoDate">接收方还是发送方的数据</param>
+            <param name="code">暗号</param>
+            <param name="fileLabel">文件标签</param>
+            <returns>加密完成的数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecryptFile.ReceiveContingueEncryption(System.Byte,SanNiuSignal.FileCenter.FileState)">
+            <summary>
+            用于接收方；对续传时回复长度的数据进行加密
+            </summary>
+            <param name="code">是同意时还是发起方</param>
+            <param name="fileState">FileState</param>
+            <returns>加密之后的数据</returns>
+        </member>
+        <member name="T:SanNiuSignal.FileCenter.FileSend.SendFile">
+            <summary>
+            文件发送处理中心
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.FileCenter.FileBase.FileToBase">
+            <summary>
+            发送和接收文件的基础类；
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileToBase.FileFind(System.Int32)">
+            <summary>
+            判断某个文件是否存在
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <returns>是否存在</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileToBase.GetFileName(System.Int32)">
+            <summary>
+            得到文件名
+            </summary>
+            <param name="FileLabel">文件编号</param>
+            <returns>文件名</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileToBase.GetFileState(System.Int32)">
+            <summary>
+            文件状态；0是等待；1是正在传输；2是暂停
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <returns>文件状态</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileToBase.GetFileLenth(System.Int32)">
+            <summary>
+            得到文件总长度；以字节为单位
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <returns>文件总长度</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileToBase.GetFileOk(System.Int32)">
+            <summary>
+            得到文件已处理长度；以字节为单位
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <returns>文件已处理长度</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileToBase.FileProgress(System.Int32)">
+            <summary>
+            得到文件的进度；返回大于0小于100的进度数；如果文件已不存在返回100；不抛异常
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <returns></returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileToBase.FileCancel(System.Int32)">
+            <summary>
+            取消发送;文件不存在会抛出异常
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileToBase.FileCancelAll">
+            <summary>
+            取消所有的文件；不抛异常
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileToBase.FileStop(System.Int32)">
+            <summary>
+            暂停发送;文件不存在或在等待状态会抛出异常；
+            </summary>
+            <param name="FileLabel">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileToBase.FileStopAll">
+            <summary>
+            暂停所有的;不抛异常
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileToBase.FileRemove(System.Int32)">
+            <summary>
+            移除一个文件；主要是系统内部用的
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <returns>是否移除成功</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileToBase.FileStopIn(SanNiuSignal.FileCenter.FileState,SanNiuSignal.FileCenter.FileBase.IFileMustBase)">
+            <summary>
+            暂停一个文件发送；内部用的，它在别的状态的时候也可以暂停
+            </summary>
+            <param name="state">FileState</param>
+            <param name="SendMust">IFileSendMust</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileBase.FileToBase.FileLabelToState(System.Int32)">
+            <summary>
+            把文件标签转化成FileState
+            </summary>
+            <param name="FileLabel">文件标签</param>
+            <returns>FileState</returns>
+        </member>
+        <member name="P:SanNiuSignal.FileCenter.FileBase.FileToBase.BufferSize">
+            <summary>
+            文件的缓冲区大小；默认为8192字节;缓冲越大发送速度越快；但同时消耗内存越大；发送和接收文件
+            缓冲区大小请设置相同；否则接收的文件数据会不正确
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.FileCenter.FileBase.FileToBase.FileAllOn">
+            <summary>
+            得到正在处理中的文件总数
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.FileCenter.FileSend.SendFile.SendMust">
+            <summary>
+            发送必须实现的一些方法
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileSend.SendFile.#ctor(SanNiuSignal.FileCenter.IFileSendMust)">
+            <summary>
+            带参数和构造函数
+            </summary>
+            <param name="sendMust">IFileSendMust</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileSend.SendFile.Send(System.Int32@,System.String,SanNiuSignal.Basics.StateBase)">
+            <summary>
+            发送文件
+            </summary>
+            <param name="fileLable">文件标签</param>
+            <param name="fileName">文件地址</param>
+            <param name="stateOne">StateBase</param>
+            <returns>形成之后的数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileSend.SendFile.FileContinue(System.Int32,SanNiuSignal.Basics.StateBase)">
+            <summary>
+            发送方的文件进行续传;如果回复是null;说明不存在
+            </summary>
+            <param name="fileLable">文件标签</param>
+            <param name="stateOne">StateBase</param>
+            <returns>byte[]</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileSend.SendFile.ReceiveDateTO(System.Byte[],SanNiuSignal.Basics.StateBase)">
+            <summary>
+            接收方发过来的数据；
+            </summary>
+            <param name="receiveToDate">收到的数据</param>
+            <param name="stateOne">StateBase</param>
+            <returns>回复的数据</returns>
+        </member>
+        <member name="T:SanNiuSignal.FileCenter.FileReceive.ReceiveFile">
+            <summary>
+            文件接收处理中心
+            </summary>
+        </member>
+        <member name="F:SanNiuSignal.FileCenter.FileReceive.ReceiveFile.ReceiveMust">
+            <summary>
+            接收方必须实现的一些方法
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileReceive.ReceiveFile.#ctor(SanNiuSignal.FileCenter.IFileReceiveMust)">
+            <summary>
+            带参数和构造函数
+            </summary>
+            <param name="receiveMust">IFileReceiveMust</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileReceive.ReceiveFile.ExpandBuffer(SanNiuSignal.FileCenter.FileState,SanNiuSignal.Basics.StateBase)">
+            <summary>
+            扩充因要接收文件而增大的缓冲区
+            </summary>
+            <param name="state">FileState</param>
+            <param name="stateOne">stateOne</param>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileReceive.ReceiveFile.FileContinue(System.Int32,SanNiuSignal.Basics.StateBase)">
+            <summary>
+            接收方的文件进行续传;如果回复是null;说明不存在
+            </summary>
+            <param name="fileLable">文件标签</param>
+            <param name="stateOne">StateBase</param>
+            <returns>byte[]</returns>
+        </member>
+        <member name="M:SanNiuSignal.FileCenter.FileReceive.ReceiveFile.ReceiveDateTO(System.Byte[],SanNiuSignal.Basics.StateBase)">
+            <summary>
+            发送方发过来的数据；
+            </summary>
+            <param name="receiveToDate">收到的数据</param>
+            <param name="stateOne">StateBase</param>
+            <returns>需要回复的数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.UdpState.#ctor(System.Net.Sockets.Socket,System.Int32)">
+            <summary>
+            带参数的构造函数
+            </summary>
+            <param name="socket">Socket</param>
+            <param name="bufferSize">缓冲区</param>
+        </member>
+        <member name="P:SanNiuSignal.UdpState.SendSocketArgs">
+            <summary>
+            异步SocketAsyncEventArgs，发送用到的；
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.UdpState.ServerIpEndPoint">
+            <summary>
+            接收到数据之后提取对方的终结点
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.SocketServer">
+            <summary>
+            面向服务器的主线程类!
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.#ctor(System.Int32)">
+            <summary>
+            带参数的构造函数
+            </summary>
+            <param name="port">端口号</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.StartEngine">
+            <summary>
+            启动服务器,如果没出现异常,说明启动成功
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.AcceptCallback(System.IAsyncResult)">
+            <summary>
+            当连接一个客户端之后的回调函数
+            </summary>
+            <param name="ar">TcpClient</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.ReadCallback(System.IAsyncResult)">
+            <summary>
+            当接收到数据之后的回调函数
+            </summary>
+            <param name="ar"></param>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.VerificationCodeManage(SanNiuSignal.PublicClass.TcpState,System.Byte)">
+            <summary>
+            登录以及心跳代码进行处理；由基类在操作
+            </summary>
+            <param name="stateOne">TcpState</param>
+            <param name="haveDate">代码</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.Send(SanNiuSignal.Basics.StateBase,System.Byte[])">
+            <summary>
+            向客户端发送数据,最基础的发送
+            </summary>
+            <param name="stateBase">TcpState</param>
+            <param name="data">发送的数据</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.SendCallback(System.IAsyncResult)">
+            <summary>
+            发送完数据之后的回调函数
+            </summary>
+            <param name="ar">Clicent</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.heartThread">
+            <summary>
+            心跳线程
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.socketRemove(SanNiuSignal.PublicClass.TcpState,System.String)">
+            <summary>
+            关闭相连的scoket以及关联的TcpState,释放所有的资源
+            </summary>
+            <param name="stateOne">TcpState</param>
+            <param name="str">原因</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.loginInitialization(System.Object)">
+            <summary>
+            当客户端连接之后要处理的一个线程,会验证客户端的身份。成功才允许登陆；
+            </summary>
+            <param name="stateOne1">TcpState</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.loginSuccess(SanNiuSignal.PublicClass.TcpState)">
+            <summary>
+            客户端完全登录成功之后要处理的事情
+            </summary>
+            <param name="stateOne">TcpState</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.CloseEngine">
+            <summary>
+            关闭服务器,释放所有资源
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.clientAllClose">
+            <summary>
+            关闭所有客户端连接
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.clientClose(SanNiuSignal.PublicClass.TcpState)">
+            <summary>
+            发送代码的形式服务器强制关闭一个客户端
+            </summary>
+            <param name="stateOne">TcpState</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.clientClose(System.Net.IPEndPoint)">
+            <summary>
+            服务器强制关闭一个客户端
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.clientCheck(System.Net.IPEndPoint)">
+            <summary>
+            检查某个客户端是否在线
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <returns>bool</returns>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.sendMessage(System.Net.IPEndPoint,System.String)">
+            <summary>
+            服务器向客户端发送文本数据
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="data">文本数据</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.sendMessage(System.Net.IPEndPoint,System.Byte[])">
+            <summary>
+            服务器向客户端发送图片数据
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="data">图片的数据</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.SendFile(System.Net.IPEndPoint,System.String)">
+            <summary>
+            发送文件；如果地址等不正确会抛出相应的异常；首先要先到FileStart启动文件发送系统;
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="fileName">文件地址</param>
+            <returns>返回文件标签；可以控制文件的任何事情</returns>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.ContinueFile(System.Net.IPEndPoint,System.Int32)">
+            <summary>
+            对文件进行续传；如果有不正确会抛出相应的异常
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <param name="fileLable">文件标签</param>
+        </member>
+        <member name="M:SanNiuSignal.SocketServer.IPEndPointToState(System.Net.IPEndPoint)">
+            <summary>
+            把ip地址转化成TcpState
+            </summary>
+            <param name="ipEndPoint">IPEndPoint</param>
+            <returns>TcpState</returns>
+        </member>
+        <member name="E:SanNiuSignal.SocketServer.Connect">
+            <summary>
+            当有客户连接成功的时候,触发此事件
+            </summary>
+        </member>
+        <member name="E:SanNiuSignal.SocketServer.Disconnection">
+            <summary>
+            当有客户突然断开的时候,触发此事件,文本参数是代表断开的原因
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.SocketServer.ClientNumber">
+            <summary>
+            当前客户端数量
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.SocketServer.ClientMax">
+            <summary>
+            允许最多客户端数
+            </summary>
+        </member>
+        <member name="P:SanNiuSignal.SocketServer.SanNiuSignal#ITxServer#ClientAll">
+            <summary>
+            得到所有的客户端
+            </summary>
+        </member>
+        <member name="T:SanNiuSignal.PasswordManage.EncryptionDecryptSeparateDate">
+            <summary>
+            大包数据处理中心
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecryptSeparateDate.SendHeadEncryption(System.Byte[],System.Byte,SanNiuSignal.Basics.StateBase)">
+            <summary>
+            发送文件初始化；发送文件前先发一个小包让对方进行确认
+            </summary>
+            <param name="date">数据</param>
+            <param name="textCode">什么文件</param>
+            <param name="state">StateBase</param>
+            <returns>加密之后的包头</returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecryptSeparateDate.SendSubjectEncryption(System.Byte[],System.Int32)">
+            <summary>
+            对文件主体部分进行加密
+            </summary>
+            <param name="date">数据</param>
+            <param name="sendDateLabel">标签</param>
+            <returns>加密之后的数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecryptSeparateDate.FileDecrypt(System.Byte[],SanNiuSignal.Basics.StateBase)">
+            <summary>
+            当收到是分组数据代码的到这里来统一处理
+            </summary>
+            <param name="date">数据</param>
+            <param name="state">StateBase</param>
+            <returns>StateCode</returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecryptSeparateDate.FileGetSendDate(SanNiuSignal.Basics.StateBase)">
+            <summary>
+            直接从这里提取一个要发送的主体字节集数据;已经加密完成
+            </summary>
+            <param name="state">StateBase</param>
+            <returns>字节集</returns>
+        </member>
+        <member name="T:SanNiuSignal.PasswordManage.EncryptionDecryptVerification">
+            <summary>
+            一般的验证暗号处理中心；登录和心跳信息等
+            </summary>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecryptVerification.EncryptionVerification(System.Byte)">
+            <summary>
+            对暗号进行加密
+            </summary>
+            <param name="Verification">暗号</param>
+            <returns>加密之后数据</returns>
+        </member>
+        <member name="M:SanNiuSignal.PasswordManage.EncryptionDecryptVerification.DecryptVerification(System.Byte[])">
+            <summary>
+            对暗号进行解密
+            </summary>
+            <param name="Verification">收到的暗号数据</param>
+            <returns>解密之后的数据</returns>
+        </member>
+    </members>
+</doc>
